@@ -38,6 +38,7 @@ for (const folder of fs.readdirSync(foldersPath)){
 	}
 }
 
+// From https://discordjs.guide/creating-your-bot/command-deployment.html#guild-commands
 const rest = new REST().setToken(token);
 (async() => {
 	try{
