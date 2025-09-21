@@ -9,7 +9,7 @@
 const { REST, Routes, Client, Events, GatewayIntentBits, Collection, MessageFlags } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
-const { token } = require('./config.json');
+const { token, clientID, guildID } = require('./config.json');
 
 // Create a bot.
 const client = new Client({ intents: [GatewayIntentBits.Guilds]});
