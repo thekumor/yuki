@@ -28,7 +28,7 @@ for (const folder of fs.readdirSync(foldersPath)){
 		const command = require(filePath);
 
 		if ('data' in command && 'execute' in command){
-			// client.commands.set(command.data.name, command);
+			client.commands.set(command.data.name, command);
 			commands.push(command.data.toJSON());
 			console.log(`${filePath} loaded.`);
 		}
