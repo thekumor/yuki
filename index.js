@@ -37,7 +37,6 @@ for (const folder of fs.readdirSync(foldersPath)){
 
 client.once(Events.ClientReady, readyClient => {
 	console.log('Bot logged!');
-	getAllMessages();
 });
 
 client.login(token);
