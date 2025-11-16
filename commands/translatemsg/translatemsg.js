@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const translate = require('translate-google')
 
 module.exports = {
-	data: new SlashCommandBuilder().setName('translate')
+	data: new SlashCommandBuilder().setName('translatemsg')
 	.setDescription('Translates a message.')
 	.addStringOption((option) => option.setName('message').setDescription('Message (ID) to translate').setRequired(true))
 	.addStringOption((option) => option.setName('from').setDescription('From language').setRequired(true))
