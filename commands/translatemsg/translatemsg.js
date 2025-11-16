@@ -9,7 +9,7 @@ module.exports = {
 	.addStringOption((option) => option.setName('to').setDescription('To language').setRequired(true)),
 
 	async execute(interaction){
-		const text = interaction.options.getString('text');
+		const text = interaction.options.getString('message');
 		const from = interaction.options.getString('from');
 		const to = interaction.options.getString('to');
 
