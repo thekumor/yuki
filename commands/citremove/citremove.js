@@ -8,7 +8,7 @@ module.exports = {
 
 	async execute(interaction){
 		let text = interaction.options.getString('text');
-		let citationPattern = 'A';
+		let citationPattern = '\[\d+\]';
 		text = text.replace(citationPattern, '');
 
 		await interaction.reply(text);
