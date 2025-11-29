@@ -8,7 +8,7 @@ module.exports = {
 
 	async execute(interaction){
 		let text = interaction.options.getString('text');
-		let citationPattern = "/\s*\[.*?\]|\s*\(.*?\)|\s*<.*?>/g";
+		let citationPattern = '/[^a-z0-9-]/g';
 		text = text.replace(citationPattern, '');
 
 		await interaction.reply(text);
