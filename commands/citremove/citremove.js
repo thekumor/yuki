@@ -6,12 +6,6 @@ module.exports = {
 	.addStringOption((option) => option.setName('message').setDescription('Text to de-citate.').setRequired(true)),
 
 	async execute(interaction){
-		var text = interaction.options.getString('message');
-		
-		for (var pos = text.search("["); pos != -1; pos = text.search("[")) {
-			text = text.substring(0, pos) + text.substring(text.indexOf("]", pos) + 1);
-		}
-		
-		interaction.reply(text);
+
 	}
 };
