@@ -9,6 +9,9 @@ module.exports = {
 	async execute(interaction){
 		let text = interaction.options.getString('text');
 		let citationPattern = '/\s*\[.*?\]\s*/g';
+
+		console.log(text.replace(citationPattern, ' ').trim());
+
 		text = text.replace(citationPattern, ' ').trim();
 
 		await interaction.reply(text);
