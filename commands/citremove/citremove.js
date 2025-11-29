@@ -11,11 +11,7 @@ module.exports = {
 		for (var pos = text.search("["); pos != -1; pos = text.search("[")) {
 			text = text.substring(0, pos) + text.substring(text.indexOf("]", pos) + 1);
 		}
-
-		translate(message.content, {from: from, to: to}).then(res => {
-			interaction.reply(res);
-		}).catch(err => {
-			console.error(err)
-		})
+		
+		interaction.reply(text);
 	}
 };
