@@ -28,7 +28,7 @@ module.exports = {
 						q: search,
 						key: key,
 						client_key: 'yuki',
-						limit: 4
+						limit: 8
 					}
 				},
 			);
@@ -36,7 +36,8 @@ module.exports = {
 			if (!response.data.results.length)
 				throw new Error('No gifs found');
 
-			const gifResponse = response.data.results[0].media_formats.gif.url;
+			const results = response.data.results;
+			const gifResponse = results[Math.floor(Math.random() * results.length)].media_formats.gif.url;
 			await interaction.reply(gifResponse);
 		} catch (error) {
 			console.error(error);
