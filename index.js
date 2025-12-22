@@ -1,11 +1,16 @@
 #!/usr/bin/env node
 // ================================================
-//
+// 
 //	Project: Yuki
-//	Description: Bot for Discord servers.
 //
+//	File: index.js
+//	Desc: Entry point for our beautiful anime
+//	character. Logs bot in and loads it's commands.
+// 
+//	Modified: 2025/09/21 10:29 AM
+//	Created: 2025/08/26 9:22 AM
 //	Authors: The Kumor
-//
+// 
 // ================================================
 
 const { REST, Routes, Client, Events, GatewayIntentBits, Collection, MessageFlags } = require('discord.js');

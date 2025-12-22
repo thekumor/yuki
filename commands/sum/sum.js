@@ -1,3 +1,16 @@
+// ================================================
+// 
+//	Project: Yuki
+//
+//	File: commands/sum/sum.js
+//	Desc: Adds numbers together.
+// 
+//	Modified: 2025/11/08 6:56 PM
+//	Created: 2025/11/08 6:56 PM
+//	Authors: The Kumor
+// 
+// ================================================
+
 const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {

@@ -1,3 +1,16 @@
+// ================================================
+// 
+//	Project: Yuki
+//
+//	File: commands/citremove/citremove.js
+//	Desc: Removes citations from text.
+// 
+//	Modified: 2025/11/29 4:14 PM
+//	Created: 2025/11/29 3:25 PM
+//	Authors: The Kumor
+// 
+// ================================================
+
 const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {

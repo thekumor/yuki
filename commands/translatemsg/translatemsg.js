@@ -1,3 +1,17 @@
+// ================================================
+// 
+//	Project: Yuki
+//
+//	File: commands/translatemsg/translatemsg.js
+//	Desc: Translates text to a given language (from
+//	an existing message).
+// 
+//	Modified: 2025/11/16 12:00 PM
+//	Created: 2025/11/16 11:41 AM
+//	Authors: The Kumor
+// 
+// ================================================
+
 const { SlashCommandBuilder } = require('discord.js');
 const translate = require('translate-google')
 

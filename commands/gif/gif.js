@@ -1,3 +1,16 @@
+// ================================================
+// 
+//	Project: Yuki
+//
+//	File: commands/gif/gif.js
+//	Desc: Sends a gif from Tenor.
+// 
+//	Modified: 2025/12/19 12:44 PM
+//	Created: 2025/12/19 11:15 AM
+//	Authors: The Kumor
+// 
+// ================================================
+
 const { SlashCommandBuilder } = require('discord.js');
 const { api } = require('../../config.json');
 const axios = require('axios');
