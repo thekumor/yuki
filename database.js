@@ -26,6 +26,7 @@ yukidb.Connect = async function () {
 		password: database.password,
 		database: 'yukidb',
 		multipleStatements: true,
+		family: 4
 	});
 
 	console.log(`Connected to database ${database.host} as user ${database.user}`);
@@ -42,6 +43,7 @@ yukidb.CreateDatabase = async function () {
 		user: database.user,
 		password: database.password,
 		multipleStatements: true,
+		family: 4
 	});
 
 	await this._Connection.query('CREATE DATABASE IF NOT EXISTS yukidb;');
