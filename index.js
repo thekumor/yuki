@@ -7,7 +7,7 @@
 //	Desc: Entry point for our beautiful anime
 //	character. Logs bot in and loads it's commands.
 // 
-//	Modified: 2025/09/21 10:29 AM
+//	Modified: 2025/12/27 2:58 PM
 //	Created: 2025/08/26 9:22 AM
 //	Authors: The Kumor
 // 
@@ -17,6 +17,13 @@ const { REST, Routes, Client, Events, GatewayIntentBits, Collection, MessageFlag
 const fs = require('node:fs');
 const path = require('node:path');
 const { token, clientID, guildID } = require('./config.json');
+var yukidb = require('./database.js');
+
+(async () => {
+	await yukidb.CreateDatabase();
+	await yukidb.Connect();
+	await yukidb.CreateTables();
+})();
 
 // Create a bot.
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -47,13 +54,13 @@ for (const folder of fs.readdirSync(foldersPath)) {
 
 const rest = new REST().setToken(token);
 
-for (var server in guildID) {
-	console.log('Server \'' + server + '\' (' + guildID[server] + ') found.');
-	
+for (var serverID in guildID) {
+	console.log('Server \'' + serverID + '\' (' + guildID[serverID] + ') found.');
+
 	(async () => {
 		try {
 			const data = await rest.put(
-				Routes.applicationGuildCommands(clientID, guildID[server]),
+				Routes.applicationGuildCommands(clientID, serverID),
 				{ body: commands },
 			);
 		}
