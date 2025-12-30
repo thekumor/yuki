@@ -28,7 +28,7 @@ module.exports = {
 
 		if (lastDaily + next < start) {
 			await yukidb.Add(interaction.guild.id, interaction.user, 'economy', 'money', 500);
-			await yukidb.Add(interaction.guild.id, interaction.user, 'economy', 'lastDaily', start);
+			await yukidb.Set(interaction.guild.id, interaction.user, 'economy', 'lastDaily', start);
 
 			const nextTake = new Date((start + next) * 1000).toLocaleString();
 
