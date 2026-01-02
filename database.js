@@ -6,7 +6,7 @@
 //	Desc: Handles database connection and data
 //	manipulation.
 // 
-//	Modified: 2026/01/02 7:05 PM
+//	Modified: 2026/01/02 7:12 PM
 //	Created: 2025/12/27 11:52 AM
 //	Authors: The Kumor
 // 
@@ -41,12 +41,15 @@ yukidb.Close = async function () {
 }
 
 yukidb.CreateDatabase = async function () {
-	this._Pool = await mysql.createConnection({
+	this._Pool = mysql.createPool({
 		host: database.host,
 		user: database.user,
 		password: database.password,
 		multipleStatements: true,
-		family: 4
+		family: 4,
+		waitForConnections: true,
+		connectionLimit: 10,
+		queueLimit: 0
 	});
 
 	await this._Pool.query('CREATE DATABASE IF NOT EXISTS yukidb;');
