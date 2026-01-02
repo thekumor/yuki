@@ -6,7 +6,7 @@
 //	Desc: Handles database connection and data
 //	manipulation.
 // 
-//	Modified: 2025/12/29 11:57 AM
+//	Modified: 2026/01/02 7:05 PM
 //	Created: 2025/12/27 11:52 AM
 //	Authors: The Kumor
 // 
@@ -16,29 +16,32 @@ var mysql = require('mysql2/promise');
 const { guildID, database } = require('./config.json');
 
 var yukidb = {
-	_Connection: null
+	_Pool: null
 };
 
-yukidb.Connect = async function () {
-	this._Connection = await mysql.createConnection({
+yukidb.Connect = function () {
+	this._Pool = mysql.createPool({
 		host: database.host,
 		user: database.user,
 		password: database.password,
 		database: 'yukidb',
 		multipleStatements: true,
-		family: 4
+		family: 4,
+		waitForConnections: true,
+		connectionLimit: 10,
+		queueLimit: 0
 	});
 
 	console.log(`Connected to database ${database.host} as user ${database.user}`);
 }
 
 yukidb.Close = async function () {
-	if (!this._Connection) return;
-	await this._Connection.end();
+	if (!this._Pool) return;
+	await this._Pool.end();
 }
 
 yukidb.CreateDatabase = async function () {
-	this._Connection = await mysql.createConnection({
+	this._Pool = await mysql.createConnection({
 		host: database.host,
 		user: database.user,
 		password: database.password,
@@ -46,17 +49,17 @@ yukidb.CreateDatabase = async function () {
 		family: 4
 	});
 
-	await this._Connection.query('CREATE DATABASE IF NOT EXISTS yukidb;');
+	await this._Pool.query('CREATE DATABASE IF NOT EXISTS yukidb;');
 	await this.Close();
 }
 
 yukidb.CreateTables = async function () {
-	if (!this._Connection) return;
+	if (!this._Pool) return;
 
 	for (const serverName in database.settings) {
 		const server = database.settings[serverName];
 
-		await this._Connection.query(`
+		await this._Pool.query(`
 			CREATE TABLE IF NOT EXISTS ${server.prefix}_person(
 				id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				userId VARCHAR(24) UNIQUE
@@ -81,7 +84,7 @@ yukidb.TablePrefix = function (serverID) {
 yukidb.IsUserRegistered = async function (serverID, user) {
 	const prefix = this.TablePrefix(serverID);
 
-	const [rows] = await this._Connection.query(`
+	const [rows] = await this._Pool.query(`
 		SELECT id FROM ${prefix}_person WHERE userId = ?;
 	`, [user.id]);
 
@@ -89,15 +92,15 @@ yukidb.IsUserRegistered = async function (serverID, user) {
 }
 
 yukidb.RegisterUser = async function (serverID, user) {
-	if (!this._Connection) return;
+	if (!this._Pool) return;
 
 	const prefix = this.TablePrefix(serverID);
 
-	const [result] = await this._Connection.query(`
+	const [result] = await this._Pool.query(`
 		INSERT IGNORE INTO ${prefix}_person(userId) VALUES(?);
 	`, [user.id]);
 
-	const [value] = await this._Connection.query(`
+	const [value] = await this._Pool.query(`
 		INSERT IGNORE INTO ${prefix}_economy(personId)
 		SELECT id FROM ${prefix}_person WHERE userId = ?
 	`, [user.id]);
@@ -110,7 +113,7 @@ yukidb.Set = async function (serverID, user, tab, key, value) {
 
 	const prefix = this.TablePrefix(serverID);
 
-	await this._Connection.query(`
+	await this._Pool.query(`
 		UPDATE ${prefix}_${tab}
 		SET ${key} = ?
 		WHERE personId = (SELECT id FROM ${prefix}_person WHERE userId = ?);
@@ -124,7 +127,7 @@ yukidb.Add = async function (serverID, user, tab, key, value) {
 
 	const prefix = this.TablePrefix(serverID);
 
-	await this._Connection.query(`
+	await this._Pool.query(`
 		UPDATE ${prefix}_${tab}
 		SET ${key} = ${key} + ?
 		WHERE personId = (SELECT id FROM ${prefix}_person WHERE userId = ?);
@@ -138,7 +141,7 @@ yukidb.Get = async function (serverID, user, tab, key) {
 
 	const prefix = this.TablePrefix(serverID);
 
-	const [rows] = await this._Connection.query(`
+	const [rows] = await this._Pool.query(`
 		SELECT ${key}
 		FROM ${prefix}_${tab}
 		WHERE personId = (SELECT id FROM ${prefix}_person WHERE userId = ?)	
