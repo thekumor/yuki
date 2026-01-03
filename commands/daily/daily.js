@@ -5,7 +5,7 @@
 //	File: commands/daily/daily.js
 //	Desc: Command for receiving daily money.
 // 
-//	Modified: 2026/01/03 7:10 PM
+//	Modified: 2026/01/03 7:13 PM
 //	Created: 2025/12/26 7:13 PM
 //	Authors: The Kumor
 // 
@@ -33,16 +33,14 @@ module.exports = {
 		const serverName = guildID[interaction.guild.id];
 
 		const currency = database.settings[serverName].currency;
+		const nextTake = nextMidnight.toLocaleString();
 
 		if (nextTime < start) {
 			await yukidb.Add(interaction.guild.id, interaction.user, 'economy', 'money', 500);
 			await yukidb.Set(interaction.guild.id, interaction.user, 'economy', 'lastDaily', start);
 
-			const nextTake = nextMidnight.toLocaleString();
-
 			await interaction.reply(`You received 500 ${currency}! Next take: ${nextTake}`);
 		} else {
-			const nextTake = new Date((lastDaily + next) * 1000).toLocaleString();
 			await interaction.reply(`You can't receive daily ${currency}. Next take: ${nextTake}`);
 		}
 	}
