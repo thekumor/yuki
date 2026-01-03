@@ -6,7 +6,7 @@
 //	Desc: Handles database connection and data
 //	manipulation.
 // 
-//	Modified: 2026/01/02 7:12 PM
+//	Modified: 2026/01/02 7:05 PM
 //	Created: 2025/12/27 11:52 AM
 //	Authors: The Kumor
 // 
