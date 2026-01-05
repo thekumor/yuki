@@ -119,7 +119,7 @@ yukidb.Set = async function (serverID, user, tab, key, value) {
 	await this._Pool.query(`
 		UPDATE ${prefix}_${tab}
 		SET ${key} = ?
-		WHERE personId = (SELECT id FROM ${prefix}_person WHERE user_id = ?);
+		WHERE person_id = (SELECT id FROM ${prefix}_person WHERE user_id = ?);
 	`, [value, user.id]);
 }
 
@@ -133,7 +133,7 @@ yukidb.Add = async function (serverID, user, tab, key, value) {
 	await this._Pool.query(`
 		UPDATE ${prefix}_${tab}
 		SET ${key} = ${key} + ?
-		WHERE personId = (SELECT id FROM ${prefix}_person WHERE user_id = ?);
+		WHERE person_id = (SELECT id FROM ${prefix}_person WHERE user_id = ?);
 	`, [value, user.id]);
 }
 
@@ -147,7 +147,7 @@ yukidb.Get = async function (serverID, user, tab, key) {
 	const [rows] = await this._Pool.query(`
 		SELECT ${key}
 		FROM ${prefix}_${tab}
-		WHERE personId = (SELECT id FROM ${prefix}_person WHERE user_id = ?)	
+		WHERE person_id = (SELECT id FROM ${prefix}_person WHERE user_id = ?)	
 	`, [user.id]);
 
 	return rows.length ? rows[0][key] : null;
