@@ -6,7 +6,7 @@
 //	Desc: Handles database connection and data
 //	manipulation.
 // 
-//	Modified: 2026/01/02 7:05 PM
+//	Modified: 2026/01/05 5:44 PM
 //	Created: 2025/12/27 11:52 AM
 //	Authors: The Kumor
 // 
@@ -65,15 +65,15 @@ yukidb.CreateTables = async function () {
 		await this._Pool.query(`
 			CREATE TABLE IF NOT EXISTS ${server.prefix}_person(
 				id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				userId VARCHAR(24) UNIQUE
+				user_id VARCHAR(24) UNIQUE
 			);
 
 			CREATE TABLE IF NOT EXISTS ${server.prefix}_economy(
 				id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				personId INT,
+				person_id INT,
 				money INT DEFAULT 0,
-				lastDaily INT DEFAULT 0,
-				FOREIGN KEY(personId) REFERENCES ${server.prefix}_person(id)
+				last_daily INT DEFAULT 0,
+				FOREIGN KEY(person_id) REFERENCES ${server.prefix}_person(id)
 			);
 		`);
 	}
@@ -88,7 +88,7 @@ yukidb.IsUserRegistered = async function (serverID, user) {
 	const prefix = this.TablePrefix(serverID);
 
 	const [rows] = await this._Pool.query(`
-		SELECT id FROM ${prefix}_person WHERE userId = ?;
+		SELECT id FROM ${prefix}_person WHERE user_id = ?;
 	`, [user.id]);
 
 	return rows.length > 0;
@@ -100,12 +100,12 @@ yukidb.RegisterUser = async function (serverID, user) {
 	const prefix = this.TablePrefix(serverID);
 
 	const [result] = await this._Pool.query(`
-		INSERT IGNORE INTO ${prefix}_person(userId) VALUES(?);
+		INSERT IGNORE INTO ${prefix}_person(user_id) VALUES(?);
 	`, [user.id]);
 
 	const [value] = await this._Pool.query(`
-		INSERT IGNORE INTO ${prefix}_economy(personId)
-		SELECT id FROM ${prefix}_person WHERE userId = ?
+		INSERT IGNORE INTO ${prefix}_economy(person_id)
+		SELECT id FROM ${prefix}_person WHERE user_id = ?
 	`, [user.id]);
 }
 
@@ -119,7 +119,7 @@ yukidb.Set = async function (serverID, user, tab, key, value) {
 	await this._Pool.query(`
 		UPDATE ${prefix}_${tab}
 		SET ${key} = ?
-		WHERE personId = (SELECT id FROM ${prefix}_person WHERE userId = ?);
+		WHERE personId = (SELECT id FROM ${prefix}_person WHERE user_id = ?);
 	`, [value, user.id]);
 }
 
@@ -133,7 +133,7 @@ yukidb.Add = async function (serverID, user, tab, key, value) {
 	await this._Pool.query(`
 		UPDATE ${prefix}_${tab}
 		SET ${key} = ${key} + ?
-		WHERE personId = (SELECT id FROM ${prefix}_person WHERE userId = ?);
+		WHERE personId = (SELECT id FROM ${prefix}_person WHERE user_id = ?);
 	`, [value, user.id]);
 }
 
@@ -147,7 +147,7 @@ yukidb.Get = async function (serverID, user, tab, key) {
 	const [rows] = await this._Pool.query(`
 		SELECT ${key}
 		FROM ${prefix}_${tab}
-		WHERE personId = (SELECT id FROM ${prefix}_person WHERE userId = ?)	
+		WHERE personId = (SELECT id FROM ${prefix}_person WHERE user_id = ?)	
 	`, [user.id]);
 
 	return rows.length ? rows[0][key] : null;
