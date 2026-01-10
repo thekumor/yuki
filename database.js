@@ -70,7 +70,7 @@ yukidb.CreateTables = async function () {
 
 			CREATE TABLE IF NOT EXISTS ${server.prefix}_economy(
 				id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				person_id INT,
+				person_id INT UNIQUE,
 				money INT DEFAULT 0,
 				last_daily INT DEFAULT 0,
 				FOREIGN KEY(person_id) REFERENCES ${server.prefix}_person(id)
@@ -78,7 +78,7 @@ yukidb.CreateTables = async function () {
 
 			CREATE TABLE IF NOT EXISTS ${server.prefix}_stats(
 				id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				person_id INT,
+				person_id INT UNIQUE,
 				messages_sent INT DEFAULT 0,
 				reactions_added INT DEFAULT 0,
 				FOREIGN KEY(person_id) REFERENCES ${server.prefix}_person(id)
@@ -86,15 +86,15 @@ yukidb.CreateTables = async function () {
 
 			CREATE TABLE IF NOT EXISTS ${server.prefix}_inventory(
 				id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				person_id INT,
-				items TEXT DEFAULT '',
+				person_id INT UNIQUE,
+				items TEXT,
 				size INT DEFAULT 10,
 				FOREIGN KEY(person_id) REFERENCES ${server.prefix}_person(id)
 			);
 
 			CREATE TABLE IF NOT EXISTS ${server.prefix}_rpg(
 				id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				person_id INT,
+				person_id INT UNIQUE,
 				level INT DEFAULT 1,
 				experience INT DEFAULT 0,
 				health INT DEFAULT 100,
