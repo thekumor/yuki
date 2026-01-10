@@ -7,7 +7,7 @@
 //	Desc: Entry point for our beautiful anime
 //	character. Logs bot in and loads it's commands.
 // 
-//	Modified: 2025/12/27 2:58 PM
+//	Modified: 2026/01/10 12:52 pM
 //	Created: 2025/08/26 9:22 AM
 //	Authors: The Kumor
 // 
@@ -25,13 +25,16 @@ var yukidb = require('./database.js');
 	await yukidb.CreateTables();
 })();
 
-// Create a bot.
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+// Create a bot
+const client = new Client({
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.GuildMembers],
+	partials: ['MESSAGE', 'CHANNEL', 'REACTION']
+});
 client.commands = new Collection();
 
 const commands = [];
 
-// Load commands.
+// Load commands
 const foldersPath = path.join(__dirname, 'commands');
 for (const folder of fs.readdirSync(foldersPath)) {
 	const commandsPath = path.join(foldersPath, folder);
@@ -95,4 +98,23 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 });
 
+// Increase stats for user based on activity
+client.on(Events.MessageCreate, async message => {
+	if (message.author.bot) return;
+
+	yukidb.Add(message.guild.id, message.author, 'stats', 'messages_sent', 1);
+});
+client.on(Events.MessageReactionAdd, async (reaction, user) => {
+	if (user.bot) return;
+
+	yukidb.Add(reaction.message.guild.id, user, 'stats', 'reactions_added', 1);
+});
+
+// Error handling
+client.on(Events.Error, error => {
+	console.error('The client encountered an error:', error);
+});
+process.on('uncaughtException', console.log);
+
+// Log our bot in.
 client.login(token);
