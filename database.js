@@ -6,7 +6,7 @@
 //	Desc: Handles database connection and data
 //	manipulation.
 // 
-//	Modified: 2026/01/10 11:49 AM
+//	Modified: 2026/01/18 11:11 AM
 //	Created: 2025/12/27 11:52 AM
 //	Authors: The Kumor
 // 
@@ -24,7 +24,7 @@ yukidb.Connect = function () {
 		host: database.host,
 		user: database.user,
 		password: database.password,
-		database: 'yukidb',
+		database: database.database,
 		multipleStatements: true,
 		family: 4,
 		waitForConnections: true,
