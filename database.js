@@ -6,7 +6,7 @@
 //	Desc: Handles database connection and data
 //	manipulation.
 // 
-//	Modified: 2026/01/18 11:11 AM
+//	Modified: 2026/01/18 11:46 AM
 //	Created: 2025/12/27 11:52 AM
 //	Authors: The Kumor
 // 
@@ -197,6 +197,22 @@ yukidb.Get = async function (serverID, user, tab, key) {
 	`, [user.id]);
 
 	return rows.length ? rows[0][key] : null;
+}
+
+yukidb.GetAll = async function (serverID, user, tab) {
+	if (!(await this.IsUserRegistered(serverID, user))) {
+                await this.RegisterUser(serverID, user);
+        }
+
+        const prefix = this.TablePrefix(serverID);
+
+        const [rows] = await this._Pool.query(`
+                SELECT *
+                FROM ${prefix}_${tab}
+                WHERE person_id = (SELECT id FROM ${prefix}_person WHERE user_id = ?)
+        `, [user.id]);
+
+        return rows.length ? rows[0] : null;
 }
 
 module.exports = yukidb;
